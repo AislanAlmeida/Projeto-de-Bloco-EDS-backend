@@ -1,0 +1,4 @@
+npm install express bcrypt mysql dotenv jsonwebtoken
+npm install typescript nodemon jest ts-jest ts-node @types/jest @types/body-parser @types/express @types/jsonwebtoken --save-dev
+npx ts-jest config:init
+npx tsc --init
