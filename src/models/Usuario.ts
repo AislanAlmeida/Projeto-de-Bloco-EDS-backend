@@ -20,7 +20,6 @@ export abstract class Usuario implements IUsuario{
     firebaseUID: string = '';
 
     constructor(email:string,senha:string,role:roles) {
-        
         this.email = email;
         this.senha = senha;
         this.role = role;

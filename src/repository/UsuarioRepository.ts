@@ -1,5 +1,5 @@
 import { UsuarioModel } from "../database/models/UsuarioModel";
-import { IRepository } from "../interfaces/IRepository";
+import { IRepository } from "./IRepository";
 import { Candidato } from "../models/Candidato";
 import { Empresa } from "../models/Empresa";
 import { Usuario } from "../models/Usuario";
@@ -57,6 +57,16 @@ export class UsuarioRepository{
         });
         
         return usuarioFirebase?.toJSON() as Candidato | Empresa;
+    }
+
+    async obterNomeUsuario(id: number):Promise<string>{
+        let nome = await UsuarioModel.findOne({
+            attributes:['nome'],
+            where:{
+                id:id
+            }
+        })
+        return nome?.getDataValue('nome');
     }
 
 }

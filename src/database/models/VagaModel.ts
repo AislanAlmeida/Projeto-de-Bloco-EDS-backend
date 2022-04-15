@@ -42,7 +42,7 @@ export const VagaModel = sequelize.define('Vagas',{
         allowNull:false,
     },
     data_validade:{
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull:false,
     }
 })

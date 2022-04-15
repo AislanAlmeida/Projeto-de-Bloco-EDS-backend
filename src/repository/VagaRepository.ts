@@ -1,7 +1,9 @@
 import { VagaModel } from "../database/models/VagaModel";
-import { IRepository } from "../interfaces/IRepository";
+import { IRepository } from "./IRepository";
 import { AreasAtuacao } from "../models/AreasAtuacao";
+import { Usuario } from "../models/Usuario";
 import { Vaga } from "../models/Vaga";
+import { Op } from "sequelize";
 
 export class VagaRepository implements IRepository<Vaga>{
 
@@ -16,21 +18,32 @@ export class VagaRepository implements IRepository<Vaga>{
             descricao: item.descricao,
             dataModificacao: item.dataInicio,
             data_validade: item.data_validade,
+        }).then((retornoVaga) => {
+            if(retornoVaga){
+                item.id = retornoVaga.getDataValue('id');
+                return item;
+            }else{
+                return undefined;
+            }
         }).catch(err => {
             console.log(err);
+            return undefined;
         })
-        if(vaga){
-            return item;
-        }
-        // throw new Error("Method not implemented.");
+        return vaga;
     }
 
 
     async excluir(id: number): Promise<boolean> {
         throw new Error("Method not implemented.");    
     }
-    async obterLista(): Promise<Vaga[]> {
-        throw new Error("Method not implemented.");
+    async obterLista(): Promise<Vaga[]|any> {
+        let vagas = await VagaModel.findAll({
+            where:{
+                data_validade:{[Op.gte]: new Date()}
+            }
+        });
+        return vagas;
+        // throw new Error("Method not implemented.");
     }
     async obterItem(id: number): Promise<Vaga|undefined> {
         throw new Error("Method not implemented.");

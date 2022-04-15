@@ -6,6 +6,8 @@ import { r_usuario } from './routes/r_usuario';
 import { sequelize } from './database/connection';
 import { r_vaga } from './routes/r_vaga';
 import cors from 'cors';
+import { r_competencia } from './routes/r_competencia';
+import { r_respostaVaga } from './routes/r_respostaVaga';
 const PORT = process.env.PORT || 3000;
 
 let app = express();
@@ -18,6 +20,8 @@ app.use(cors());
 app.use('/login',r_login);
 app.use('/usuarios',r_usuario);
 app.use('/vagas',r_vaga);
+app.use('/competencias',r_competencia);
+app.use('/responder',r_respostaVaga);
 
 app.listen(PORT,async () => {
     // await sequelize.sync({force:true});

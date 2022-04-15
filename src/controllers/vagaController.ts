@@ -1,19 +1,30 @@
-import {Request,response,Response} from 'express';
+import {Request,Response} from 'express';
 import { VagaModel } from '../database/models/VagaModel';
+import { Competencia } from '../models/CompetenciaVaga';
 import { FormasContratacao } from '../models/FormasContratacao';
 import { statusEnum, Vaga } from '../models/Vaga';
+import { UsuarioRepository } from '../repository/UsuarioRepository';
 import { VagaRepository } from '../repository/VagaRepository';
 
-const repository = new VagaRepository();
+const vagaRepository = new VagaRepository();
+const usuarioRepository = new UsuarioRepository();
+
 class vagaController{
+    
     async criarVaga(req:Request,res:Response){
         let idUsuario = req.userId;
         
-        let {cargo,cidade,forma_contratacao,UF,descricao,data_validade,area_atuacao} = req.body as Vaga;
+        let {cargo,cidade,UF,descricao,data_validade,area_atuacao} = req.body;
+        let forma_contratacao: FormasContratacao = req.body.forma_contratacao;
 
-        let vaga = new Vaga(descricao,new Date(),data_validade,area_atuacao);
+        let competencias: Array<Competencia> = req.body.competencias;
         
-        //verificar se é melhor passar tudo no constructor
+        if(!cargo && !cidade && !forma_contratacao && !UF && !descricao && !data_validade && !area_atuacao){
+            return res.status(400).send('Parametros Incorretos');
+        }
+        
+        //AQUI => IMPLEMENTAR PADRÃO DE PROJETO FACTORY
+        let vaga = new Vaga(descricao,new Date(),data_validade,area_atuacao,forma_contratacao);
         vaga.cargo = cargo;
         vaga.cidade = cidade;
         vaga.UF = UF;
@@ -21,9 +32,15 @@ class vagaController{
         vaga.descricao = descricao;
         vaga.status = statusEnum.Inativo;
         vaga.id_empresa = idUsuario;
+        
+        let vagaModel = await vagaRepository.criar(vaga);
 
+        if(competencias.length > 0){
+            competencias.forEach(element => {
+                vaga.adicionarCompetencia(element);
+            });
+        }
 
-        let vagaModel = await repository.criar(vaga);
         if(vagaModel){
             res.status(201).json(vagaModel);
         }else{
@@ -34,9 +51,15 @@ class vagaController{
 
     async obterVagas(req:Request,res:Response){
         let id_empresa = req.userId;
-        let vagas = await repository.obterVagasPostadas(id_empresa);
+        let vagas = await vagaRepository.obterLista();
         return vagas.length > 0 ? res.status(200).json(vagas) : res.sendStatus(204);
     }
+
+    async responderVaga(req:Request, res:Response){
+        console.log('Controller ResponderVaga ainda não funciona');
+        res.status(200).json({mensagem: 'Controller responderVaga ainda não está pronto'});
+    }
+
 }
 
 function converteData(dataString:string):Date{

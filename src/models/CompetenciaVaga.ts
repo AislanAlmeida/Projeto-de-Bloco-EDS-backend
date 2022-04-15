@@ -1,6 +1,6 @@
 export class Competencia{
     ID: number = 0;
-    IDVaga: number = 0;
+    id_vaga: number = 0;
     descricao: string;
     perfil: number;
     peso: number;
