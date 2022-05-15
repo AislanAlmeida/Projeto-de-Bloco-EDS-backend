@@ -35,3 +35,4 @@ export const RespostaVagaModel = sequelize.define('RespostasVagas',{
         defaultValue: new Date()
     }
 })
+RespostaVagaModel.belongsTo(UsuarioModel,{foreignKey:'id_usuario'});

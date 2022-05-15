@@ -8,6 +8,15 @@ import { r_vaga } from './routes/r_vaga';
 import cors from 'cors';
 import { r_competencia } from './routes/r_competencia';
 import { r_respostaVaga } from './routes/r_respostaVaga';
+import {schedule} from 'node-cron';
+import { CronjobService } from './services/cronjobsService';
+import { UsuarioRepository } from './repository/UsuarioRepository';
+
+var cron = require('node-cron'); 
+cron.schedule('* * * * *', () => {
+  CronjobService.encerrarVagasVencidas();
+});
+
 const PORT = process.env.PORT || 3000;
 
 let app = express();
@@ -25,6 +34,10 @@ app.use('/responder',r_respostaVaga);
 
 app.listen(PORT,async () => {
     // await sequelize.sync({force:true});
-    await sequelize.sync();
+    // let admin = new UsuarioRepository();
+    // await admin.criarUsuarioAdmin();
+
+    await sequelize.sync({alter:true});
+    
     console.log(`API funcionando na porta: ${PORT}`)
 });

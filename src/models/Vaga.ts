@@ -7,7 +7,8 @@ import {Model} from 'sequelize';
 
 export enum statusEnum{
     Ativo='ativo',
-    Inativo='inativo'
+    Encerrada='encerrada',
+    Expirada='expirada'
 }
 
 export class Vaga implements IVaga{
@@ -41,7 +42,35 @@ export class Vaga implements IVaga{
         
         let repository = new CompetenciaRepository();
         let competenciaSalva = await repository.criar(competencia);
-        // competenciaSalva ? this.competencias.push(competenciaSalva):console.log('nada para salvar');
+
     }
+
+    async adicionarMultiplasCompetencias(competencias: Competencia[]){
+        competencias = competencias.map(c => {
+            c.id_vaga = this.id
+            return c;
+        })
+        let repository = new CompetenciaRepository();
+        let competenciasSalvas = await repository.incluirVarias(competencias);
+        console.log(competenciasSalvas);
+        return competenciasSalvas;
+        // if(competencias.length > 0){
+
+        //     for (const competencia of competencias) {
+        //         await this.adicionarCompetencia(competencia)
+        //     }
+        // }
+    }
+
+    obterPerfilOportunidade(){
+        let mult = 0;
+        let div = 0;
+        for (const competencia of this.competencias) {
+            mult += competencia.perfil * competencia.peso;
+            div += competencia.peso;
+        }
+        return (mult/div).toFixed(2);
+    }
+
 
 }

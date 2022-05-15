@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../connection";
 import { CompetenciaModel } from "./CompetenciaModel";
+import { RespostaVagaModel } from "./RespostaVagaModel";
 
 export const RespostaCompetenciaModel = sequelize.define('RespostasCompetencias',{
     id:{
@@ -24,6 +25,13 @@ export const RespostaCompetenciaModel = sequelize.define('RespostasCompetencias'
     id_resposta:{
         type: DataTypes.INTEGER,
         allowNull: false,
-        //incluir a referencia da resposta da vaga
+        references:{
+            model: RespostaVagaModel,
+            key: 'id'
+        }
     }
 })
+CompetenciaModel.hasMany(RespostaCompetenciaModel,{foreignKey:'id_competencia'})
+RespostaCompetenciaModel.belongsTo(CompetenciaModel,{foreignKey:'id_competencia'})
+RespostaVagaModel.hasMany(RespostaCompetenciaModel,{foreignKey:'id_resposta'})
+RespostaCompetenciaModel.belongsTo(RespostaVagaModel,{foreignKey:'id_resposta'})

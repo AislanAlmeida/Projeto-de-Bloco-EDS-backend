@@ -9,7 +9,6 @@ export const decodeToken = async (req:Request,res:Response,next:NextFunction) =>
         const decodeToken = await admin.auth().verifyIdToken(token);
         if(decodeToken){
             let usuario = await new UsuarioRepository().obterUsuarioPorIdFirebase(decodeToken.uid)
-            console.log(usuario);
             req.userRole = usuario.role;
             req.userId = usuario.id;
             next();

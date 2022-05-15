@@ -6,7 +6,6 @@ export interface IUsuario{
     endereco: string;
     telefone: string;
     email: string;
-    senha:string;
     role: roles;
     status: string;
     dataModificacao: Date;

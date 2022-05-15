@@ -14,6 +14,12 @@ export const UsuarioModel = sequelize.define('Usuarios',{
     endereco:{
         type: DataTypes.STRING,
     },
+    cidade:{
+        type: DataTypes.STRING,
+    },
+    UF:{
+        type: DataTypes.STRING,
+    },
     telefone:{
         type: DataTypes.STRING,
     },
@@ -28,6 +34,15 @@ export const UsuarioModel = sequelize.define('Usuarios',{
     role:{
         type: DataTypes.STRING,
     },
+    CPF:{
+        type: DataTypes.STRING,
+    },
+    CNPJ:{
+        type: DataTypes.STRING,
+    },
+    razaoSocial:{
+        type: DataTypes.STRING,
+    },
     dataModificacao:{
         type: DataTypes.DATE,
         defaultValue: new Date(),
@@ -40,6 +55,9 @@ export const UsuarioModel = sequelize.define('Usuarios',{
         type: DataTypes.STRING
     },
     linkedin:{
+        type:DataTypes.STRING
+    },
+    motivoBloqueio:{
         type:DataTypes.STRING
     }
 })

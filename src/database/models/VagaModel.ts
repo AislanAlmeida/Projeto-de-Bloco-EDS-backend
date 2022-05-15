@@ -1,5 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../connection";
+import { CompetenciaModel } from "./CompetenciaModel";
+import { RespostaVagaModel } from "./RespostaVagaModel";
 import { UsuarioModel } from "./UsuarioModel";
 export const VagaModel = sequelize.define('Vagas',{
     id:{
@@ -32,6 +34,10 @@ export const VagaModel = sequelize.define('Vagas',{
         type:DataTypes.STRING,
         allowNull:false,
     },
+    area_atuacao:{
+        type:DataTypes.STRING,
+        allowNull:false,
+    },
     descricao:{
         type: DataTypes.STRING,
         allowNull:false,
@@ -44,5 +50,13 @@ export const VagaModel = sequelize.define('Vagas',{
     data_validade:{
         type: DataTypes.DATE,
         allowNull:false,
+    },
+    status:{
+        type:DataTypes.STRING,
+        allowNull:false,
+        defaultValue:'ativa'
     }
 })
+VagaModel.belongsTo(UsuarioModel,{foreignKey:'id_usuario'});
+VagaModel.hasMany(RespostaVagaModel,{foreignKey: 'id_vaga'});
+RespostaVagaModel.belongsTo(VagaModel,{foreignKey: 'id_vaga'});

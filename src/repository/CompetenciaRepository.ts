@@ -6,7 +6,7 @@ import { CompetenciaModel } from "../database/models/CompetenciaModel";
 //implementar interface
 export class CompetenciaRepository {
     async criar(item: Competencia): Promise<Competencia|undefined> {
-        let newItem = new Competencia(item.descricao,item.perfil,item.peso);
+        let newItem = new Competencia(item.nome,item.descricao,item.perfil,item.peso);
         newItem.id_vaga = item.id_vaga;
  
         let competencia = await CompetenciaModel.create({
@@ -24,25 +24,31 @@ export class CompetenciaRepository {
         }
 
     }
+
+    async incluirVarias(itens: Competencia[]):Promise<any>{
+        let competencias = await CompetenciaModel.bulkCreate(itens.map(i => {
+            return {
+                id_vaga: i.id_vaga,
+                nome: i.nome,
+                descricao: i.descricao,
+                perfil: i.perfil,
+                peso: i.peso
+            }
+        }));
+        return competencias;
+    }
     
     atualizar(id: number, item: Competencia): boolean {
         throw new Error("Method not implemented.");
     }
     
     excluir(id: number): boolean {
-        throw new Error("Method not implemented.");
-        // let index = competencias.findIndex(v => v.ID == id);
-        // if(index >= 0){
-            //     competencias.splice(index);
-            //     return true;
-            // }else{
-                //     return false;
-                // }   
+        throw new Error("Method not implemented."); 
     }
             
     obterLista(): Competencia[] {
         throw new Error("Method not implemented.");
-        // return competencias;
+
     }
     
     async obterItem(id: number): Promise<Competencia | undefined> {
@@ -52,8 +58,8 @@ export class CompetenciaRepository {
             }
         })
         if(competencia){
-            let c = new Competencia(competencia.getDataValue('descricao'),competencia.getDataValue('perfil'),competencia.getDataValue('peso'));
-            c.ID = competencia.getDataValue('id');
+            let c = new Competencia(competencia.getDataValue('nome'),competencia.getDataValue('descricao'),competencia.getDataValue('perfil'),competencia.getDataValue('peso'));
+            c.id = competencia.getDataValue('id');
             return c;
         }
         else{
@@ -64,7 +70,7 @@ export class CompetenciaRepository {
 
     async obterCompetenciasVaga(idVaga: number){
         let competencias = await CompetenciaModel.findAll({
-            attributes:['id','descricao'],
+            attributes:['id','nome','descricao','peso','perfil'],
             where:{
                 id_vaga: idVaga
             }
