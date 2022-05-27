@@ -1,10 +1,7 @@
-import { IRepository } from "../repository/IRepository";
 import { RespostaCompetencia } from "../models/RespostaCompetencia";
 import { RespostaCompetenciaModel } from "../database/models/RespostaCompetenciaModel";
 
-let respostas = Array<RespostaCompetencia>(); 
-
-export class RespostaCompetenciaRepository implements IRepository<RespostaCompetencia>{
+export class RespostaCompetenciaRepository{
     async criar(item: RespostaCompetencia): Promise<RespostaCompetencia | undefined> {
         let respostaCompetencia = await RespostaCompetenciaModel.create({
             resposta: item.resposta,
@@ -46,19 +43,5 @@ export class RespostaCompetenciaRepository implements IRepository<RespostaCompet
         return respostas;
         // return respostas.filter(r => r.id_resposta == idResposta);
     }
-
-    atualizar(id: number, item: RespostaCompetencia): Promise<boolean> {
-        throw new Error("Method not implemented.");
-    }
-    excluir(id: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
-    }
-    obterLista(): Promise<RespostaCompetencia[]> {
-        throw new Error("Method not implemented.");
-    }
-    obterItem(id: number): Promise<RespostaCompetencia | undefined> {
-        throw new Error("Method not implemented.");
-    }
-
 
 }

@@ -11,6 +11,7 @@ import { r_respostaVaga } from './routes/r_respostaVaga';
 import {schedule} from 'node-cron';
 import { CronjobService } from './services/cronjobsService';
 import { UsuarioRepository } from './repository/UsuarioRepository';
+import { r_relatorio } from './routes/r_relatorios';
 
 var cron = require('node-cron'); 
 cron.schedule('* * * * *', () => {
@@ -31,6 +32,7 @@ app.use('/usuarios',r_usuario);
 app.use('/vagas',r_vaga);
 app.use('/competencias',r_competencia);
 app.use('/responder',r_respostaVaga);
+app.use('/relatorios',r_relatorio);
 
 app.listen(PORT,async () => {
     // await sequelize.sync({force:true});

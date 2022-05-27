@@ -8,3 +8,8 @@ services:
       MYSQL_DATABASE: ventura
     ports:
      - "3306:3306"
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+     - "8080:8081"

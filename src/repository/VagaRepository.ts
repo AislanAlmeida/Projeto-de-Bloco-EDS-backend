@@ -13,6 +13,7 @@ import { RespostaCompetenciaModel } from "../database/models/RespostaCompetencia
 
 export class VagaRepository implements IRepository<Vaga>{
 
+
     async criar(item: Vaga): Promise<Vaga | undefined> {
         
         let vaga = await VagaModel.create({
@@ -260,5 +261,53 @@ export class VagaRepository implements IRepository<Vaga>{
             ]
         })
         return vagas;
+    }
+
+    async obterQuantidadeVagasCriadas(hoje:boolean=false){
+        let vagas = await VagaModel.findAll({
+            logging: true,
+            attributes:[
+                [sequelize.fn('COUNT',sequelize.col('id')),'qtd']
+            ],
+            where:{
+                createdAt: {[Op.gte] : hoje ? new Date().setHours(0,0,0) : new Date(2022,1,1)}
+            }
+        })
+        return vagas[0].getDataValue('qtd');
+    }
+
+    async obterQuantidadeVagasRespondidas(hoje:boolean=false) {
+        let vagas = await RespostaVagaModel.findAll({
+            attributes:[
+                [sequelize.fn('COUNT',sequelize.col('id')),'qtd']
+            ],
+            where:{
+                createdAt: {[Op.gte] : hoje ? new Date().setHours(0,0,0) : new Date(2022,1,1)}
+            }
+        })
+        return vagas[0].getDataValue('qtd');
+    }
+    
+    async obterQuantidadeUsuariosInscritos(hoje:boolean=false):Promise<Array<any>|number>{
+        let roles = await UsuarioModel.findAll({
+            attributes:[
+                'role',
+                [sequelize.fn('COUNT',sequelize.col('id')),'qtd']
+            ],
+            where:{
+                createdAt: {[Op.gte] : hoje ? new Date().setHours(0,0,0) : new Date(2022,1,1)}
+            },
+            group:['role']
+        })
+
+        let lista = [];
+        for (const role of roles) {
+            lista.push({role:role.getDataValue('role'),qtd:role.getDataValue('qtd')});
+        }
+        if(hoje){
+            return roles.length;
+        }
+        return lista;
+        
     }
 }
